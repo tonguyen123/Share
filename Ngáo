@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mày Né Tao Hả 😏</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+body{
+    margin:0;
+    padding:0;
+    background:#f5c6d6;
+    font-family:'Quicksand', sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.box{
+    background:white;
+    width:90%;
+    max-width:420px;
+    padding:35px 25px;
+    border-radius:25px;
+    text-align:center;
+    box-shadow:0 15px 35px rgba(0,0,0,0.15);
+    position:relative;
+    overflow:hidden;
+}
+
+h1{
+    font-family:'Pacifico', cursive;
+    color:#ff3c88;
+    font-size:30px;
+    margin-bottom:20px;
+}
+
+p{
+    font-size:17px;
+    line-height:1.6;
+    color:#333;
+}
+
+.buttons{
+    margin-top:30px;
+    position:relative;
+    height:90px;
+}
+
+button{
+    border:none;
+    padding:14px 30px;
+    border-radius:40px;
+    font-size:16px;
+    cursor:pointer;
+    position:absolute;
+    transition:0.3s;
+}
+
+.yes{
+    background:#ff3c88;
+    color:white;
+    left:15%;
+}
+
+.no{
+    background:#555;
+    color:white;
+    right:15%;
+}
+
+.result{
+    display:none;
+    position:relative;
+    z-index:2;
+}
+
+.result h2{
+    font-family:'Pacifico', cursive;
+    color:#ff3c88;
+    font-size:28px;
+}
+
+.heart{
+    position:absolute;
+    color:#ff3c88;
+    font-size:20px;
+    opacity:0;
+    animation:floatUp 3s linear forwards;
+    pointer-events:none;
+}
+
+@keyframes floatUp{
+    0%{transform:translateY(0); opacity:0;}
+    20%{opacity:0.8;}
+    100%{transform:translateY(-180px); opacity:0;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+<div id="main">
+<h1>Mày Né Tao Hả 😏</h1>
+
+<p>
+Tao nói thiệt nè...<br>
+Không phải tao rảnh mà đi trêu mày suốt đâu.<br><br>
+
+Tao để ý mày lâu rồi đó.<br>
+Mày cười một cái là tao nhớ cả ngày.<br><br>
+
+Mày càng giả bộ lạnh lùng,<br>
+tao càng muốn đứng đó chọc cho mày chịu thua 😌<br><br>
+
+Thôi nói gọn lại cho nhanh:<br>
+Làm người yêu tao đi.
+</p>
+
+<div class="buttons" id="area">
+<button class="yes" id="yesBtn">Có 😳</button>
+<button class="no" id="noBtn">Không 🙂</button>
+</div>
+</div>
+
+<div class="result" id="result">
+<h2>CHỐT KÈO 😏</h2>
+<p>
+Tao biết mà... mày cũng thích tao đúng không 😉<br><br>
+Từ giờ khỏi né nữa.<br>
+Tao chính thức được quyền quan tâm mày mỗi ngày.<br><br>
+
+Buồn thì tao dỗ.<br>
+Mệt thì tao nghe.<br>
+Lạnh thì tao ôm.<br><br>
+
+Quay xe là không có cửa đâu nha 🙂
+</p>
+</div>
+
+</div>
+
+<script>
+var yesBtn = document.getElementById("yesBtn");
+var noBtn = document.getElementById("noBtn");
+var main = document.getElementById("main");
+var result = document.getElementById("result");
+var area = document.getElementById("area");
+
+var noClickCount = 0;
+var yesScale = 1;
+
+// ===== NÚT KHÔNG CHẠY NGẪU NHIÊN KHÔNG ĐÈ LÊN CÓ =====
+function handleNo(e){
+    e.preventDefault();
+    noClickCount++;
+
+    if(noClickCount < 10){
+
+        var areaRect = area.getBoundingClientRect();
+        var yesRect = yesBtn.getBoundingClientRect();
+
+        var btnWidth = noBtn.offsetWidth;
+        var btnHeight = noBtn.offsetHeight;
+
+        var maxX = area.clientWidth - btnWidth;
+        var maxY = area.clientHeight - btnHeight;
+
+        var randomX, randomY;
+        var tries = 0;
+
+        do{
+            randomX = Math.random() * maxX;
+            randomY = Math.random() * maxY;
+
+            var newLeft = areaRect.left + randomX;
+            var newTop = areaRect.top + randomY;
+
+            var overlap =
+                !(newLeft + btnWidth < yesRect.left ||
+                  newLeft > yesRect.right ||
+                  newTop + btnHeight < yesRect.top ||
+                  newTop > yesRect.bottom);
+
+            tries++;
+
+        } while(overlap && tries < 50);
+
+        noBtn.style.left = randomX + "px";
+        noBtn.style.top = randomY + "px";
+
+        yesScale += 0.1;
+        yesBtn.style.transform = "scale(" + yesScale + ")";
+
+    } else {
+        noBtn.style.opacity="0";
+        noBtn.style.transform="scale(0.1)";
+        setTimeout(()=>{ noBtn.style.display="none"; },300);
+    }
+}
+
+noBtn.addEventListener("pointerdown", handleNo);
+noBtn.addEventListener("touchstart", handleNo);
+
+
+// ===== BẤM CÓ → HIỆN CHỐT KÈO + TIM BAY =====
+yesBtn.addEventListener("pointerdown", function(){
+    main.style.display="none";
+    result.style.display="block";
+    startHearts();
+});
+
+yesBtn.addEventListener("touchstart", function(){
+    main.style.display="none";
+    result.style.display="block";
+    startHearts();
+});
+
+// ===== TIM BAY KIỂU CŨ =====
+function startHearts(){
+    setInterval(function(){
+        var heart = document.createElement("div");
+        heart.className="heart";
+        heart.innerHTML="❤";
+        heart.style.left=Math.random()*100+"%";
+        heart.style.bottom="0px";
+        document.querySelector(".box").appendChild(heart);
+        setTimeout(()=>heart.remove(),3000);
+    },400);
+}
+</script>
+
+</body>
+</html>
