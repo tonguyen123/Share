@@ -226,7 +226,8 @@ function startHearts(){
     setInterval(function(){
         var heart = document.createElement("div");
         heart.className="heart";
-        heart.innerHTML="❤";
+        var hearts = ["❤","💖","💘","💕","💓"];
+        heart.innerHTML = hearts[Math.floor(Math.random()*hearts.length)];
         heart.style.left=Math.random()*100+"%";
         heart.style.bottom="0px";
         document.querySelector(".box").appendChild(heart);
